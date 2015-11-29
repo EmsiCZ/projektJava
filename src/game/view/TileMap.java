@@ -23,7 +23,7 @@ public class TileMap {
     private int mapHeight;
     
     private BufferedImage tileset;
-    public BufferedImage background;
+    private BufferedImage background;
     private Tile tiles[][];
     
     private int minx;
@@ -139,7 +139,7 @@ public class TileMap {
     }
     
     public void draw(Graphics2D g){
-        
+        g.drawImage(background, 0, 0, null);
         for (int row = 0; row < mapHeight; row++) {
             for (int col = 0; col < mapWidth; col++) {
                 int rc = map[row][col];

@@ -5,8 +5,12 @@
  */
 package game.models;
 import game.view.GamePanel;
+import static game.view.GamePanel.WIDTH;
 import game.view.TileMap;
 import java.awt.*;
+import java.awt.image.*;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -35,6 +39,7 @@ public class Player {
     private double gravity;
     
     private TileMap tileMap;
+    private BufferedImage idle;
     
     private boolean topLeft;
     private boolean topRight;
@@ -45,8 +50,8 @@ public class Player {
             
        tileMap = tm;
        
-       width = 40;
-       height = 40;
+       width = 26;
+       height = 50;
        
        /*moveSpeed = 0.6;
        maxSpeed = 4.2;
@@ -74,15 +79,25 @@ public class Player {
         }
     }
     
+    public void loadPlayer(String s){
+        
+        try{
+            idle = ImageIO.read(new File(s));
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
     private void calculateCorners(double x, double y){
         
         int leftTile = tileMap.getColTile((int) (x - width / 2));
         int rightTile = tileMap.getColTile((int) (x + width / 2) - 1); //-1 for out of bounds
         int topTile = tileMap.getRowTile((int) (y - height / 2));
         int bottomTile = tileMap.getRowTile((int) (y + height / 2) - 1);
-        topLeft = tileMap.isBlocked(topTile, leftTile);
+        topLeft = tileMap.isBlocked(topTile, leftTile) || x < 0;
         topRight = tileMap.isBlocked(topTile, rightTile);
-        bottomLeft = tileMap.isBlocked(bottomTile, leftTile);
+        bottomLeft = tileMap.isBlocked(bottomTile, leftTile) || x < 0;
         bottomRight = tileMap.isBlocked(bottomTile, rightTile);
         
     }
@@ -205,12 +220,15 @@ public class Player {
         int tx = tileMap.getx();
         int ty = tileMap.gety();
         
-        g.setColor(Color.BLUE);
+        g.drawImage(idle, (int) (tx + x - width / 2),
+                (int) (ty + y - height / 2),
+                width, height, null);
+        /*g.setColor(Color.BLUE);
         g.fillRect(
                 (int) (tx + x - width / 2),
                 (int) (ty + y - height / 2),
                 width, height
-        );
+        );*/
     }
     
     

@@ -86,12 +86,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         g = (Graphics2D) image.getGraphics();
         
         tileMap = new TileMap("src/game/levels/testMap.txt", 64);
-        //tileMap.loadBackground("src/game/graphics/BG1280x720.gif");
+        tileMap.loadBackground("src/game/graphics/BG1280x720.gif");
         tileMap.loadTiles("src/game/graphics/tileset.gif");
         
         player = new Player(tileMap);
-        player.setx(50);
-        player.sety(50);
+        player.loadPlayer("src/game/graphics/player/Idle_000.gif");
+        player.setx(80);
+        player.sety(80);
     }
     
     ///////////////////////////////////////////////////////
@@ -104,10 +105,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     
     private void render(){
         
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
-        //g.drawImage(tileMap.background, 0, 0, null);
-       
+        /*g.setColor(Color.BLACK);
+        g.fillRect(0, 0, WIDTH, HEIGHT);*/
+        
         tileMap.draw(g);
         player.draw(g);
     }
