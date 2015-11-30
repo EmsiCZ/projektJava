@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package game.models;
+import game.view.Animation;
 import game.view.GamePanel;
 import static game.view.GamePanel.WIDTH;
 import game.view.TileMap;
@@ -39,12 +40,20 @@ public class Player {
     private double gravity;
     
     private TileMap tileMap;
-    private BufferedImage idle;
+   // private BufferedImage idle;
     
     private boolean topLeft;
     private boolean topRight;
     private boolean bottomLeft;
     private boolean bottomRight;
+    
+    private Animation animation;
+    private BufferedImage[] idleNinja;
+    private BufferedImage[] runningNinja;
+    private BufferedImage[] jumpingNinja;
+    private BufferedImage[] fallingNinja;
+    private boolean facingRight;
+    
     
     public Player(TileMap tm){
             
@@ -67,6 +76,42 @@ public class Player {
        jumpStart = -16.0;
        gravity = 0.64;
        
+       try{
+           
+           idleNinja = new BufferedImage[10];
+           jumpingNinja = new BufferedImage[1];
+           fallingNinja = new BufferedImage[1];
+           runningNinja = new BufferedImage[10];
+           
+           
+           width = 41;
+           height = 55;
+           jumpingNinja[0] = ImageIO.read(new File("src/game/graphics/player/falling.png"));
+           fallingNinja[0] = ImageIO.read(new File("src/game/graphics/player/falling.png"));
+           
+           BufferedImage image = ImageIO.read(new File("src/game/graphics/player/idle.png"));
+           width = 26;
+           height = 50;
+           for (int i = 0; i < runningNinja.length; i++) {
+               idleNinja[i] = image.getSubimage(i * width + i, 0, width, height);
+           }
+           
+           image = ImageIO.read(new File("src/game/graphics/player/running.png"));
+           width = 41;
+           height = 52;
+           for (int i = 0; i < runningNinja.length; i++) {
+               runningNinja[i] = image.getSubimage(i * width + i, 0, width, height);
+           }
+           
+           
+       }
+       catch(Exception e){
+           e.printStackTrace();
+       }
+       
+       animation = new Animation();
+       facingRight = true;
+       
     }
     public void setx(int i){ x = i; }
     public void sety(int i){ y = i; }
@@ -82,7 +127,7 @@ public class Player {
     public void loadPlayer(String s){
         
         try{
-            idle = ImageIO.read(new File(s));
+            //idle = ImageIO.read(new File(s));
         }
         catch(Exception e){
             e.printStackTrace();
@@ -212,6 +257,32 @@ public class Player {
         //move the map
         tileMap.setx((int) (GamePanel.WIDTH / 2 - x));
         tileMap.sety((int) (GamePanel.HEIGHT / 2 - y));
+        
+        //create animations
+        if(left || right){
+            animation.setFrames(runningNinja);
+            animation.setDelay(50);
+        }
+        else{
+            animation.setFrames(idleNinja);
+            animation.setDelay(50);
+        }
+        if(dy < 0){
+            animation.setFrames(jumpingNinja);
+            animation.setDelay(-1);
+        }
+        if(dy > 0){
+            animation.setFrames(fallingNinja);
+            animation.setDelay(-1);
+        }
+        animation.update();
+        
+        if(dx > 0){
+            facingRight = true;
+        }
+        else if(dx < 0){
+            facingRight = false;
+        }
       
     }
     
@@ -220,9 +291,22 @@ public class Player {
         int tx = tileMap.getx();
         int ty = tileMap.gety();
         
-        g.drawImage(idle, (int) (tx + x - width / 2),
-                (int) (ty + y - height / 2),
-                width, height, null);
+        if(facingRight){
+            g.drawImage(
+                    animation.getImage(),
+                    (int) (tx + x - animation.getImage().getWidth() / 2),
+                    (int) (ty + y - animation.getImage().getHeight() / 2),
+                    null);
+        }
+        else{
+            g.drawImage(
+                    animation.getImage(),
+                    (int) (tx + x - animation.getImage().getWidth() / 2 + animation.getImage().getWidth()),
+                    (int) (ty + y - animation.getImage().getHeight() / 2),
+                    -animation.getImage().getWidth(),
+                    animation.getImage().getHeight(),
+                    null);
+        }
         /*g.setColor(Color.BLUE);
         g.fillRect(
                 (int) (tx + x - width / 2),

@@ -90,7 +90,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         tileMap.loadTiles("src/game/graphics/tileset.gif");
         
         player = new Player(tileMap);
-        player.loadPlayer("src/game/graphics/player/Idle_000.gif");
+        player.loadPlayer("src/game/graphics/player/run_000.png");
         player.setx(80);
         player.sety(80);
     }
