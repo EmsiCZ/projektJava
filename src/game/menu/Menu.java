@@ -7,6 +7,7 @@
 package game.menu;
 
 import game.menu.MenuComponent;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -23,18 +24,38 @@ public class Menu {
     
     private BufferedImage MenuBackground;
     private BufferedImage MenuPosition;
-    private BufferedImage quit;
+    private BufferedImage[] NinjaMimg;
+    private BufferedImage[] NinjaFimg;
     private ArrayList<MenuComponent>components;
-    
+    private MenuComponent NinjaF;
+    private MenuComponent NinjaM;
     private MenuComponent cmp;
+    private String s = "NinjaM";
+    private enum STATE{
+        MAINMENU,
+        CHARACTER
+    };
+    private STATE State = STATE.MAINMENU;
     
     public Menu(String FilePath){
+        
+        NinjaMimg = new BufferedImage[2];
+        NinjaFimg = new BufferedImage[2];
         components = new ArrayList<>();
+        
         components.add(new MenuComponent("src/game/menu/StartGame1.png",479,300,"start"));
         components.add(new MenuComponent("src/game/menu/quit1.png",550,380,"quit"));
         cmp = new MenuComponent("src/game/menu/MenuKunai.png",400,315,"start");
+        
+        NinjaM = new MenuComponent("src/game/menu/NinjaM.png",248,200,"male");
+        NinjaF = new MenuComponent("src/game/menu/NinjaF.png",800,200,"female");
+        
+        NinjaMimg[0] = NinjaM.getImage();
+        NinjaFimg[0] = NinjaF.getImage(); 
         try{
             MenuBackground = ImageIO.read(new File(FilePath));
+            NinjaMimg[1] = ImageIO.read(new File("src/game/menu/NinjaMGP.png"));
+            NinjaFimg[1] = ImageIO.read(new File("src/game/menu/NinjaFG.png"));
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -49,11 +70,25 @@ public class Menu {
         
     }
     public void draw(Graphics2D g){
+        
         g.drawImage(MenuBackground, 0, 0, null);
-        for(int i = 0; i < components.size(); i++){
-            g.drawImage(components.get(i).getImage(), components.get(i).getX(), components.get(i).getY(), null);
+        if(State == STATE.MAINMENU){
+            for(int i = 0; i < components.size(); i++){
+                g.drawImage(components.get(i).getImage(), components.get(i).getX(), components.get(i).getY(), null);
+            }
+            g.drawImage(cmp.getImage(),cmp.getX(),cmp.getY(),null);
         }
-        g.drawImage(cmp.getImage(),cmp.getX(),cmp.getY(),null);
+        if(State == STATE.CHARACTER){
+            if(s == "NinjaM"){
+                g.drawImage(NinjaMimg[0], NinjaM.getX(), NinjaM.getY(),null);
+                g.drawImage(NinjaFimg[1], NinjaF.getX(), NinjaF.getY(),null);
+            }
+            else if(s == "NinjaF"){
+                g.drawImage(NinjaMimg[1], NinjaM.getX(), NinjaM.getY(),null);
+                g.drawImage(NinjaFimg[0], NinjaF.getX(), NinjaF.getY(),null); 
+            }
+        }
+        
     }
     public void moveUp(){
         cmp.moveUp();
@@ -66,5 +101,14 @@ public class Menu {
     }
     public void setState(String state){
         cmp.setState(state);
+    }
+    public void setMenuState(String s){
+        if(s == "mainmenu")
+            State = STATE.MAINMENU;
+        else if(s == "character")
+            State = STATE.CHARACTER;
+    }
+    public void character(String s){
+        this.s = s;
     }
 }

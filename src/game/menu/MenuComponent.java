@@ -6,6 +6,7 @@
 
 package game.menu;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
@@ -38,6 +39,9 @@ public class MenuComponent {
         }catch(Exception e){
             e.printStackTrace();
         }
+        width = title.getWidth();
+        height = title.getHeight();
+        
     }
 
     public int getX(){

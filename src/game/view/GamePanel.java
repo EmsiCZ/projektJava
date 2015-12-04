@@ -4,15 +4,18 @@
  * and open the template in the editor.
  */
 package game.view;
+import game.menu.Menu;
 import game.models.Player;
-import javax.swing.JPanel;
 import java.awt.*;
-import java.awt.image.*;
 import java.awt.event.*;
+import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import game.menu.Menu;
+import javax.swing.JPanel;
 /**
  *
  * @author Luboš
@@ -36,7 +39,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     
     private enum STATE{
         GAME, 
-        MENU
+        MENU,
+        CHARACTER
     };
     private STATE State = STATE.MENU;
     
@@ -90,7 +94,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         
         running = true;
         
-            image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+            image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_BGR);
             g = (Graphics2D) image.getGraphics();
 
             tileMap = new TileMap("src/game/levels/testMap.txt", 64);
@@ -122,7 +126,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         
         /*g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);*/
-           if(State == STATE.MENU){
+           if(State == STATE.MENU || State == STATE.CHARACTER){
                menu.draw(g);
            }
            if(State == STATE.GAME){
@@ -157,7 +161,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
             if(code == KeyEvent.VK_ENTER){
                 if(menu.getState() == "start"){
-                    State = STATE.GAME;
+                    State = STATE.CHARACTER;
+                    menu.setMenuState("character");
+                    code = -1;
                 }
                 if(menu.getState() == "quit"){
                     System.exit(1);
@@ -165,6 +171,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 }
             }
         }
+        /********CHARACTER STATE***********/
+        if(State == STATE.CHARACTER){
+            if(code == KeyEvent.VK_LEFT){
+                menu.character("NinjaM");
+            }
+            if(code == KeyEvent.VK_RIGHT){
+                menu.character("NinjaF");
+            }
+            if(code == KeyEvent.VK_ENTER){
+                State = STATE.GAME;
+            }
+        }
+        /********GAME STATE*************/
         if(State == STATE.GAME){
             if(code == KeyEvent.VK_LEFT){
                 player.setLeft(true);
@@ -193,5 +212,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         if(code == KeyEvent.VK_SPACE){
             player.setThrowing(false);
         }
+        
     }
 }
