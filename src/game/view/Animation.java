@@ -20,16 +20,23 @@ public class Animation {
     
     public Animation(){}
     
-    public void setFrames(BufferedImage[] images){
+    public void setFrames(BufferedImage[] images, boolean loop){
         frames = images;
-        if(currentFrame >= frames.length) currentFrame = 0;
+        if(currentFrame >= frames.length){
+            if(loop){
+                currentFrame = 0;
+            }
+            else{
+                currentFrame = frames.length - 1;
+            }
+        }
     }
     
     public void setDelay(long d){
         delay = d;
     }
     
-    public void update(){
+    public void update(boolean loop){
         if(delay == -1) return;
         
         long elapsed = (System.nanoTime() - startTime) / 1000000;
@@ -38,12 +45,23 @@ public class Animation {
             startTime = System.nanoTime();
         }
         if(currentFrame == frames.length){
-            currentFrame = 0;
+            if(loop){
+               currentFrame = 0;  
+            }
+            else{
+               currentFrame = frames.length - 1;
+            }
+            
         }
     }
     
     public BufferedImage getImage(){
         return frames[currentFrame];
     }
+    
+    public boolean isLastFrame(){
+        return currentFrame == frames.length - 1;
+    }
+    
     
 }

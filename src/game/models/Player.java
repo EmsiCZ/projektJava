@@ -31,6 +31,8 @@ public class Player {
     private boolean right;
     private boolean jumping;
     private boolean falling;
+    private boolean throwing;
+    private boolean throww = false;
     
     private double moveSpeed;
     private double maxSpeed;
@@ -52,8 +54,9 @@ public class Player {
     private BufferedImage[] runningNinja;
     private BufferedImage[] jumpingNinja;
     private BufferedImage[] fallingNinja;
+    private BufferedImage[] throwingNinja;
     private boolean facingRight;
-    
+    private boolean loop;
     
     public Player(TileMap tm){
             
@@ -79,14 +82,15 @@ public class Player {
        try{
            
            idleNinja = new BufferedImage[10];
-           jumpingNinja = new BufferedImage[1];
+           jumpingNinja = new BufferedImage[10];
            fallingNinja = new BufferedImage[1];
            runningNinja = new BufferedImage[10];
+           throwingNinja = new BufferedImage[10];
            
            
            width = 41;
            height = 55;
-           jumpingNinja[0] = ImageIO.read(new File("src/game/graphics/player/falling.png"));
+           
            fallingNinja[0] = ImageIO.read(new File("src/game/graphics/player/falling.png"));
            
            BufferedImage image = ImageIO.read(new File("src/game/graphics/player/idle.png"));
@@ -96,12 +100,27 @@ public class Player {
                idleNinja[i] = image.getSubimage(i * width + i, 0, width, height);
            }
            
+           image = ImageIO.read(new File("src/game/graphics/player/jumping.png"));
+           width = 41;
+           height = 55;
+           for (int i = 0; i < jumpingNinja.length; i++) {
+               jumpingNinja[i] = image.getSubimage(i * width + i, 0, width, height);
+           }
+           
            image = ImageIO.read(new File("src/game/graphics/player/running.png"));
            width = 41;
            height = 52;
            for (int i = 0; i < runningNinja.length; i++) {
                runningNinja[i] = image.getSubimage(i * width + i, 0, width, height);
            }
+           
+           image = ImageIO.read(new File("src/game/graphics/player/throwing.png"));
+           width = 43;
+           height = 51;
+           for (int i = 0; i < throwingNinja.length; i++) {
+               throwingNinja[i] = image.getSubimage(i * width + i, 0, width, height);
+           }
+           
            
            
        }
@@ -118,10 +137,15 @@ public class Player {
     
     public void setLeft(boolean b){ left = b; }
     public void setRight(boolean b){ right = b; }
+    public void setThrowing(boolean b){ throwing = b; }
     public void setJumping(boolean b){
         if(!falling){
             jumping = true;
         }
+    }
+    
+    public boolean getThrow(){
+        return throww;
     }
     
     public void loadPlayer(String s){
@@ -178,6 +202,11 @@ public class Player {
             }
         }
         
+        if(throwing && !throww){
+            throww = true;
+            throwing = false;
+        }
+            
         if(jumping){
            dy = jumpStart;
            falling = true;
@@ -193,6 +222,7 @@ public class Player {
         else{
             dy = 0;
         }
+        
         
         //check collisions
         int currCol = tileMap.getColTile((int) x);
@@ -259,23 +289,36 @@ public class Player {
         tileMap.sety((int) (GamePanel.HEIGHT / 2 - y));
         
         //create animations
-        if(left || right){
-            animation.setFrames(runningNinja);
+        if(throww){
+            loop = true;
+            animation.setFrames(throwingNinja, loop);
+            animation.setDelay(50);
+            if(animation.isLastFrame()){
+                throww = false;
+            }
+        }
+        if((left || right) && !throww){
+            loop = true;
+            animation.setFrames(runningNinja, loop);
             animation.setDelay(50);
         }
-        else{
-            animation.setFrames(idleNinja);
+        else if(!throww){
+            loop = true;
+            animation.setFrames(idleNinja, loop);
             animation.setDelay(50);
         }
         if(dy < 0){
-            animation.setFrames(jumpingNinja);
-            animation.setDelay(-1);
+            loop = false;
+            animation.setFrames(jumpingNinja, loop);
+            animation.setDelay(45);
         }
         if(dy > 0){
-            animation.setFrames(fallingNinja);
+            loop = false;
+            animation.setFrames(fallingNinja, loop);
             animation.setDelay(-1);
         }
-        animation.update();
+        
+        animation.update(loop);
         
         if(dx > 0){
             facingRight = true;
@@ -307,12 +350,6 @@ public class Player {
                     animation.getImage().getHeight(),
                     null);
         }
-        /*g.setColor(Color.BLUE);
-        g.fillRect(
-                (int) (tx + x - width / 2),
-                (int) (ty + y - height / 2),
-                width, height
-        );*/
     }
     
     

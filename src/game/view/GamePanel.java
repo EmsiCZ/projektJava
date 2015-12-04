@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public void run(){
         
         init();
-        
+      
         long startTime;
         long urdTime;
         long waitTime;
@@ -82,36 +82,36 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         
         running = true;
         
-        image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-        g = (Graphics2D) image.getGraphics();
+            image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+            g = (Graphics2D) image.getGraphics();
+
+            tileMap = new TileMap("src/game/levels/testMap.txt", 64);
+            tileMap.loadBackground("src/game/graphics/BG1280x720.gif");
+            tileMap.loadTiles("src/game/graphics/tileset.gif");
+
+            player = new Player(tileMap);
+            player.loadPlayer("src/game/graphics/player/run_000.png");
+            player.setx(80);
+            player.sety(80);
+        }
         
-        tileMap = new TileMap("src/game/levels/testMap.txt", 64);
-        tileMap.loadBackground("src/game/graphics/BG1280x720.gif");
-        tileMap.loadTiles("src/game/graphics/tileset.gif");
-        
-        player = new Player(tileMap);
-        player.loadPlayer("src/game/graphics/player/run_000.png");
-        player.setx(80);
-        player.sety(80);
-    }
-    
     ///////////////////////////////////////////////////////
     
     private void update(){
         
-        tileMap.update();
-        player.update();
-    }
-    
+           tileMap.update();
+           player.update(); 
+        }
+        
     private void render(){
         
         /*g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);*/
         
-        tileMap.draw(g);
-        player.draw(g);
-    }
-    
+           tileMap.draw(g);
+           player.draw(g); 
+        }
+        
     private void draw(){
         Graphics g2 = getGraphics();
         g2.drawImage(image, 0, 0, null);
@@ -130,8 +130,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         if(code == KeyEvent.VK_RIGHT){
             player.setRight(true);
         }
-        if(code == KeyEvent.VK_SPACE){
+        if(code == KeyEvent.VK_UP){
             player.setJumping(true);
+        }
+        if(code == KeyEvent.VK_SPACE){
+            player.setThrowing(true);
         }
     }
     public void keyReleased(KeyEvent key){
@@ -143,6 +146,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
         if(code == KeyEvent.VK_RIGHT){
             player.setRight(false);
+        }
+        if(code == KeyEvent.VK_SPACE){
+            player.setThrowing(false);
         }
     }
 }
