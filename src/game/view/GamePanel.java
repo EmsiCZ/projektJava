@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
+import game.menu.Menu;
 /**
  *
  * @author Luboš
@@ -34,6 +34,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     private TileMap tileMap;
     private Player player;
     
+    private enum STATE{
+        GAME, 
+        MENU
+    };
+    private STATE State = STATE.MENU;
+    
+    private Menu menu;
+    
     public GamePanel(){
         super();
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -53,7 +61,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public void run(){
         
         init();
-      
+        initMenu();
         long startTime;
         long urdTime;
         long waitTime;
@@ -96,45 +104,80 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
         
     ///////////////////////////////////////////////////////
+    public void initMenu(){
+        running = true;
+        
+        menu = new Menu("src/game/menu/MenuBackground.gif");
+    }
     
     private void update(){
         
-           tileMap.update();
-           player.update(); 
+            if(State == STATE.GAME){
+                tileMap.update();
+                player.update();
+            }
         }
         
     private void render(){
         
         /*g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);*/
-        
-           tileMap.draw(g);
-           player.draw(g); 
+           if(State == STATE.MENU){
+               menu.draw(g);
+           }
+           if(State == STATE.GAME){
+            tileMap.draw(g);
+            player.draw(g); 
+           }
         }
         
     private void draw(){
-        Graphics g2 = getGraphics();
-        g2.drawImage(image, 0, 0, null);
-        g2.dispose();
+        
+        //if(State == STATE.GAME){
+            Graphics g2 = getGraphics();
+            g2.drawImage(image, 0, 0, null);
+            g2.dispose();
+       // }
         
     }
     
     public void keyTyped(KeyEvent key){}
+    
     public void keyPressed(KeyEvent key){
         
         int code = key.getKeyCode();
-        
-        if(code == KeyEvent.VK_LEFT){
-            player.setLeft(true);
+        if(State == STATE.MENU){
+            if(code == KeyEvent.VK_UP){
+                menu.moveUp();
+                menu.setState("start");
+            }
+            if(code == KeyEvent.VK_DOWN){
+                menu.moveDown();
+                menu.setState("quit");
+            }
+            if(code == KeyEvent.VK_ENTER){
+                if(menu.getState() == "start"){
+                    State = STATE.GAME;
+                }
+                if(menu.getState() == "quit"){
+                    System.exit(1);
+                  
+                }
+            }
         }
-        if(code == KeyEvent.VK_RIGHT){
-            player.setRight(true);
-        }
-        if(code == KeyEvent.VK_UP){
-            player.setJumping(true);
-        }
-        if(code == KeyEvent.VK_SPACE){
-            player.setThrowing(true);
+        if(State == STATE.GAME){
+            if(code == KeyEvent.VK_LEFT){
+                player.setLeft(true);
+            }
+            if(code == KeyEvent.VK_RIGHT){
+                player.setRight(true);
+            }
+            if(code == KeyEvent.VK_UP){
+                player.setJumping(true);
+            }
+            if(code == KeyEvent.VK_SPACE){
+                player.setThrowing(true);
+            }
         }
     }
     public void keyReleased(KeyEvent key){
