@@ -26,6 +26,7 @@ public class MenuComponent {
     private BufferedImage title;
     
     private String state;
+    private String pokus; // pridano
     
     
     public MenuComponent(String FilePath,int x,int y,String state){
