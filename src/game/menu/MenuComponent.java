@@ -20,6 +20,7 @@ public class MenuComponent {
     private int width;
     private int height;
     
+    private boolean pokus;
     private int x;
     private int y;
     
