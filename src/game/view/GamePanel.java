@@ -107,13 +107,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             player.sety(80);
         }
         
-    ///////////////////////////////////////////////////////
+    
     public void initMenu(){
         running = true;
         
         menu = new Menu("src/game/menu/MenuBackground.gif");
     }
     
+    ///////////////////////////////////////////////////////
     private void update(){
         
             if(State == STATE.GAME){

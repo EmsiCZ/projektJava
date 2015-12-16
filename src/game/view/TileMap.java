@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package game.view;
+import game.models.Finish;
 import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
@@ -24,7 +25,9 @@ public class TileMap {
     
     private BufferedImage tileset;
     private BufferedImage background;
+    
     private Tile tiles[][];
+    private Finish finish;
     
     private int minx;
     private int miny;
@@ -34,6 +37,7 @@ public class TileMap {
     public TileMap(String s, int tileSize){
         
         this.tileSize = tileSize;
+        finish = new Finish();
         
         try{
             BufferedReader br = new BufferedReader(new FileReader(s));
@@ -51,12 +55,17 @@ public class TileMap {
                 String[] tokens = line.split(delimiters);
                 for (int col = 0; col < mapWidth; col++) {
                     map[row][col] = Integer.parseInt(tokens[col]);
+                    if(map[row][col] == 3){
+                        finish.setPosition(col * tileSize - 5, row * tileSize - 16);
+                    }
+               
                 }
             }
             
         }
         catch(Exception e){
         }
+        finish.loadFinish();
     }
     
     public void loadTiles(String s){
@@ -78,6 +87,7 @@ public class TileMap {
         catch(Exception e){
             e.printStackTrace();
         }
+        
     }
     
     public void loadBackground(String s){
@@ -156,5 +166,11 @@ public class TileMap {
             }
             
         }
+        g.drawImage(
+                    finish.getImage(),
+                    x + finish.getx(),
+                    y + finish.gety(),
+                    null
+                );
     }
 }
