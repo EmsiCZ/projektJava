@@ -8,6 +8,7 @@ import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
+import game.models.GameObject;
 /**
  *
  * @author Luboš
@@ -31,9 +32,13 @@ public class TileMap {
     private int maxx = 0;
     private int maxy = 0;
     
+    private GameObject obj;
+    
     public TileMap(String s, int tileSize){
         
         this.tileSize = tileSize;
+        
+       // obj = new GameObject(1000,598,"src/game/models/spikes.png");
         
         try{
             BufferedReader br = new BufferedReader(new FileReader(s));
@@ -156,5 +161,6 @@ public class TileMap {
             }
             
         }
+       // g.drawImage(obj.getImage(), obj.getX() * tileSize , obj.getY(), null);
     }
 }

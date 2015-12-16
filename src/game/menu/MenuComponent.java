@@ -19,15 +19,14 @@ public class MenuComponent {
     
     private int width;
     private int height;
-    
-    private boolean pokus;
+  
     private int x;
     private int y;
     
     private BufferedImage title;
     
     private String state;
-    private String pokus; // pridano
+    
     
     
     public MenuComponent(String FilePath,int x,int y,String state){

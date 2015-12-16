@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import game.models.GameObject;
 /**
  *
  * @author Luboš
@@ -36,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     
     private TileMap tileMap;
     private Player player;
-    
+    private GameObject obj;
     private enum STATE{
         GAME, 
         MENU,
@@ -105,6 +106,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             player.loadPlayer("src/game/graphics/player/run_000.png");
             player.setx(80);
             player.sety(80);
+           // obj = new GameObject(tileMap.getMapWidht()*tileMap.getTileSize() - 1000,558,"src/game/models/spikes.png");
         }
         
     ///////////////////////////////////////////////////////
@@ -132,6 +134,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
            if(State == STATE.GAME){
             tileMap.draw(g);
             player.draw(g); 
+           // obj.draw(g);
            }
         }
         
