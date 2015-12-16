@@ -26,7 +26,7 @@ public class MenuComponent {
     private BufferedImage title;
     
     private String state;
-    
+
     
     
     public MenuComponent(String FilePath,int x,int y,String state){

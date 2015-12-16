@@ -109,13 +109,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
            // obj = new GameObject(tileMap.getMapWidht()*tileMap.getTileSize() - 1000,558,"src/game/models/spikes.png");
         }
         
-    ///////////////////////////////////////////////////////
+    
     public void initMenu(){
         running = true;
         
         menu = new Menu("src/game/menu/MenuBackground.gif");
     }
     
+    ///////////////////////////////////////////////////////
     private void update(){
         
             if(State == STATE.GAME){
