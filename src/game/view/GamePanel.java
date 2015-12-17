@@ -29,6 +29,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     private boolean running;
     
     private BufferedImage image;
+    private BufferedImage levelCompleted;
     private Graphics2D g;
     
     private int FPS = 60;
@@ -37,10 +38,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     private TileMap tileMap;
     private Player player;
     
+    private int level = 1;
+    
     private enum STATE{
         GAME, 
         MENU,
-        CHARACTER
+        CHARACTER,
+        LEVELCOMPLETED
     };
     private STATE State = STATE.MENU;
     
@@ -97,7 +101,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_BGR);
             g = (Graphics2D) image.getGraphics();
 
-            tileMap = new TileMap("src/game/levels/testMap.txt", 64);
+            tileMap = new TileMap("src/game/levels/level"+level+".txt", 64);
             tileMap.loadBackground("src/game/graphics/BG1280x720.gif");
             tileMap.loadTiles("src/game/graphics/tileset.gif");
 
@@ -105,6 +109,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             player.loadPlayer("src/game/graphics/player/run_000.png");
             player.setx(80);
             player.sety(80);
+            
+            try{
+            levelCompleted = ImageIO.read(new File("src/game/graphics/level_complete.gif"));
+            }
+            catch(Exception e){
+            }
         }
         
     
@@ -114,12 +124,35 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         menu = new Menu("src/game/menu/MenuBackground.gif");
     }
     
+    public void nextLevel(){
+        tileMap.setLevelFinished(false);
+        tileMap = null;
+        player = null;
+                
+        level++;
+        tileMap = new TileMap("src/game/levels/level"+level+".txt", 64);
+        tileMap.loadBackground("src/game/graphics/BG1280x720.gif");
+        tileMap.loadTiles("src/game/graphics/tileset.gif");
+                
+        player = new Player(tileMap);
+        player.loadPlayer("src/game/graphics/player/run_000.png");
+        player.setx(80);
+        player.sety(80);
+                
+        State = STATE.GAME;
+    }
+    
     ///////////////////////////////////////////////////////
     private void update(){
         
             if(State == STATE.GAME){
                 tileMap.update();
                 player.update();
+                if(tileMap.getLevelFinished()){
+                    State = STATE.LEVELCOMPLETED;
+                    player.setx(80);
+                    player.sety(80);
+                }
             }
         }
         
@@ -131,9 +164,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                menu.draw(g);
            }
            if(State == STATE.GAME){
-            tileMap.draw(g);
-            player.draw(g); 
+                tileMap.draw(g);
+                player.draw(g); 
            }
+           if(State == STATE.LEVELCOMPLETED){
+              g.drawImage(levelCompleted, 0, 0, null);
+            }
         }
         
     private void draw(){
@@ -197,6 +233,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
             if(code == KeyEvent.VK_SPACE){
                 player.setThrowing(true);
+            }
+        }
+        /********LEVEL COMPLETED STATE*************/
+        if(State == STATE.LEVELCOMPLETED){
+            if(code == KeyEvent.VK_ENTER){
+                nextLevel();
             }
         }
     }

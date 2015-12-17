@@ -17,10 +17,14 @@ public class Finish {
     private BufferedImage image;
     private int x;
     private int y;
+    private int finishX;
+    private int finishY;
     
     public void setPosition(int x, int y){
         this.x = x;
         this.y = y;
+        finishX = x + image.getWidth()/2;
+        finishY = y + image.getHeight()/2;
     }
     
     public int getx(){
@@ -29,6 +33,14 @@ public class Finish {
     
     public int gety(){
         return y;
+    }
+    
+    public int getFinishX(){
+        return finishX;
+    }
+    
+    public int getFinishY(){
+        return finishY;
     }
     
     public BufferedImage getImage(){

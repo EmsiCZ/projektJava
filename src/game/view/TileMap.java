@@ -34,10 +34,13 @@ public class TileMap {
     private int maxx = 0;
     private int maxy = 0;
     
+    private boolean levelFinished = false;
+    
     public TileMap(String s, int tileSize){
         
         this.tileSize = tileSize;
         finish = new Finish();
+        finish.loadFinish();
         
         try{
             BufferedReader br = new BufferedReader(new FileReader(s));
@@ -65,7 +68,9 @@ public class TileMap {
         }
         catch(Exception e){
         }
-        finish.loadFinish();
+        
+        
+        
     }
     
     public void loadTiles(String s){
@@ -100,6 +105,10 @@ public class TileMap {
         }
     }
     
+    public Finish getFinish(){
+        return finish;
+    }
+    
     public int getx(){ return x; }
     public int gety(){ return y; }
     
@@ -118,6 +127,11 @@ public class TileMap {
     public int getMapWidht(){
         return mapWidth;
     }
+    
+    public boolean getLevelFinished(){
+        return levelFinished;
+    }
+    
     public boolean isBlocked(int row, int col){
         int rc = map[row][col];
         int r = rc / tiles[0].length;
@@ -125,6 +139,9 @@ public class TileMap {
         return tiles[r][c].isBlocked();
     }
     
+    public void setLevelFinished(boolean x){
+        levelFinished = x;
+    }
     public void setx(int i){ 
         x = i;
         if(x < minx){
@@ -149,15 +166,16 @@ public class TileMap {
     }
     
     public void draw(Graphics2D g){
-        g.drawImage(background, 0, 0, null);
-        for (int row = 0; row < mapHeight; row++) {
-            for (int col = 0; col < mapWidth; col++) {
-                int rc = map[row][col];
+        
+           g.drawImage(background, 0, 0, null);
+            for (int row = 0; row < mapHeight; row++) {
+                for (int col = 0; col < mapWidth; col++) {
+                    int rc = map[row][col];
                 
-                int r = rc / tiles[0].length;
-                int c = rc % tiles[0].length;
+                    int r = rc / tiles[0].length;
+                    int c = rc % tiles[0].length;
                 
-                g.drawImage(
+                    g.drawImage(
                     tiles[r][c].getImage(),
                     x + col * tileSize,
                     y + row * tileSize,
@@ -165,12 +183,13 @@ public class TileMap {
                 );
             }
             
-        }
-        g.drawImage(
+            }
+            g.drawImage(
                     finish.getImage(),
                     x + finish.getx(),
                     y + finish.gety(),
                     null
-                );
-    }
+                ); 
+        }
+        
 }
