@@ -342,7 +342,7 @@ public class Player {
 
         /*CHECK COLISION*/
         checkColision();
-
+        monsterColision();
 
      
         tileMap.setLevelFinished(checkFinish());
@@ -368,6 +368,28 @@ public class Player {
                 dead = true;
             }
         }
+    }
+    void monsterColision(){
+        for (int i = 0; i < tileMap.getMonsters().size(); i++) {
+            if(
+                    ((x - animation.getImage().getWidth() / 2) + animation.getImage().getWidth() >= tileMap.getMonsters().get(i).getX() && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() >= tileMap.getMonsters().get(i).getY()+10 &&
+                    (x - animation.getImage().getWidth() / 2) + animation.getImage().getWidth() <= tileMap.getMonsters().get(i).getX()+32 && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() >= tileMap.getMonsters().get(i).getY()+10&&
+                    (x - animation.getImage().getWidth() / 2) + animation.getImage().getWidth() >= tileMap.getMonsters().get(i).getX() && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() <= tileMap.getMonsters().get(i).getY() +21 &&
+                    (x - animation.getImage().getWidth() / 2) + animation.getImage().getWidth() <= tileMap.getMonsters().get(i).getX()+32 && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() <= tileMap.getMonsters().get(i).getY() +21)
+                    ||
+                    ((x - animation.getImage().getWidth() / 2) <= tileMap.getMonsters().get(i).getX()+40 && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() >= tileMap.getMonsters().get(i).getY()+10 &&
+                    (x - animation.getImage().getWidth() / 2) >= tileMap.getMonsters().get(i).getX() && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() >= tileMap.getMonsters().get(i).getY()+10 &&
+                    (x - animation.getImage().getWidth() / 2) >= tileMap.getMonsters().get(i).getX() && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() <= tileMap.getMonsters().get(i).getY() +21 &&
+                    (x - animation.getImage().getWidth() / 2) <= tileMap.getMonsters().get(i).getX()+40 && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() <= tileMap.getMonsters().get(i).getY() +21)
+                    
+                    
+              ){
+                x = 80;
+                y = 80;
+                dead = true;
+            }
+        }
+        
     }
     public boolean isDead(){
         return dead;

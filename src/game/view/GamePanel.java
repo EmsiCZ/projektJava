@@ -119,9 +119,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             g = (Graphics2D) image.getGraphics();
 
 
-           // tileMap = new TileMap("src/game/levels/level2.txt", 64);
+            tileMap = new TileMap("src/game/levels/level3.txt", 64);
 
-            tileMap = new TileMap("src/game/levels/level"+level+".txt", 64);
+            //tileMap = new TileMap("src/game/levels/level"+level+".txt", 64);
 
             tileMap.loadBackground("src/game/graphics/BG1280x720.gif");
             tileMap.loadTiles("src/game/graphics/tileset.gif");
@@ -133,8 +133,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             player.sety(100);
            
 
-            player.setx(80);
-            player.sety(80);
+            /*player.setx(80);
+            player.sety(80);*/
             
             try{
             levelCompleted = ImageIO.read(new File("src/game/graphics/level_complete.gif"));

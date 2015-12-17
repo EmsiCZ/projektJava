@@ -41,7 +41,7 @@ public class TileMap {
     private GameObject obj2;
     
     private ArrayList<GameObject> spikes;
-
+    private ArrayList<GameObject> monsters;
     private boolean levelFinished = false;
     
 
@@ -51,7 +51,7 @@ public class TileMap {
 
 
         spikes = new ArrayList<>();
-        
+        monsters = new ArrayList<>();
         //finish = new Finish();
 
 
@@ -85,6 +85,9 @@ public class TileMap {
                     }
                     if(map[row][col] == 5){
                         spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32,"src/game/models/spikes.png"));
+                    }
+                    if(map[row][col] == 8){
+                        monsters.add( new GameObject(col * tileSize + 0,row * tileSize + 43,"src/game/graphics/monster.png"));
                     }
                
                 }
@@ -192,9 +195,14 @@ public class TileMap {
     public ArrayList<GameObject> getSpikes(){
         return spikes;
     }
-    
+     public ArrayList<GameObject> getMonsters(){
+        return monsters;
+    }
     public void update(){
-        
+        if(!monsters.isEmpty())
+        for(int i = 0; i < monsters.size(); i++){
+            monsters.get(i).move();
+        }
     }
     
     public void draw(Graphics2D g){
@@ -235,7 +243,11 @@ public class TileMap {
         for (int i = 0; i < spikes.size(); i++) {
           g.drawImage(spikes.get(i).getImage(), x+spikes.get(i).getX(), spikes.get(i).getY()+y, null);  
         }}
-        
+        if(!monsters.isEmpty()){
+            for (int j = 0; j < monsters.size(); j++) {
+            g.drawImage(monsters.get(j).getImage(), x+monsters.get(j).getX(), y+monsters.get(j).getY(), null);
+            }
+        }
         
     }
 
