@@ -20,13 +20,17 @@ public class GameObject {
     private int x;
     private int y;
     private BufferedImage obj;
-    private boolean left;
+    private boolean left=true;
+    private int distance;
+    private int pixel = 100;
     
     public GameObject(int x,int y, boolean left, String s){
+    
       this.x = x;
       this.y = y;
       this.left = left;
         
+      //this.distance =  x - (x-300); 
         try{
            obj = ImageIO.read(new File(s));
             
@@ -53,6 +57,20 @@ public class GameObject {
     }
     public void setX(int move){
         x+=move;
+    }
+    public void move(){
+        if(left){
+            x = x-1;
+            pixel--;
+            if(pixel == 0)
+                left = false;
+        }
+        else if(!left){
+            x = x+1;
+            pixel++;
+            if(pixel == 100)
+                left = true;
+        }
     }
     
 }

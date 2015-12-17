@@ -42,6 +42,7 @@ public class TileMap {
     private ArrayList<Shooter> shooters;
     private ArrayList<GameObject> shoot;
 
+    private ArrayList<GameObject> monsters;
     private boolean levelFinished = false;
     
     long startTime = System.nanoTime();
@@ -54,6 +55,10 @@ public class TileMap {
         shooters = new ArrayList<>();
         shoot = new ArrayList<>();
         
+        monsters = new ArrayList<>();
+
+
+
         finish = new Finish();
         finish.loadFinish();
 
@@ -83,7 +88,14 @@ public class TileMap {
                         spikes.add(new GameObject(col * tileSize + 32,row * tileSize + 32,true,"src/game/models/spikes.png"));
                     }
                     if(map[row][col] == 5){
+
                         spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32,true,"src/game/models/spikes.png"));
+
+                        spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32, true,"src/game/models/spikes.png"));
+                    }
+                    if(map[row][col] == 8){
+                        monsters.add( new GameObject(col * tileSize + 0,row * tileSize + 43, true,"src/game/graphics/monster.png"));
+
                     }
                     if(map[row][col] == 6){
                         shooters.add(new Shooter(col * tileSize, row * tileSize + 16, true, "src/game/graphics/shooter_left.png" ));
@@ -248,11 +260,18 @@ public class TileMap {
     }
     
     
+     public ArrayList<GameObject> getMonsters(){
+        return monsters;
+    }
     public void update(){
         generateShots();
         moveShots();
         deleteShots();
         
+        if(!monsters.isEmpty())
+        for(int i = 0; i < monsters.size(); i++){
+            monsters.get(i).move();
+        }
     }
     
     public void draw(Graphics2D g){
@@ -299,6 +318,11 @@ public class TileMap {
           g.drawImage(shoot.get(i).getImage(), x+shoot.get(i).getX(), shoot.get(i).getY()+y, null);  
         }}
         
+        if(!monsters.isEmpty()){
+            for (int j = 0; j < monsters.size(); j++) {
+            g.drawImage(monsters.get(j).getImage(), x+monsters.get(j).getX(), y+monsters.get(j).getY(), null);
+            }
+        }
         
     }
 
