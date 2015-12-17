@@ -6,10 +6,12 @@
 package game.view;
 import game.models.Finish;
 import game.models.GameObject;
+import game.models.Shooter;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.imageio.ImageIO;
 /**
  *
@@ -36,25 +38,22 @@ public class TileMap {
     private int maxx = 0;
     private int maxy = 0;
     
-
-    private GameObject obj;
-    private GameObject obj2;
-    
     private ArrayList<GameObject> spikes;
+    private ArrayList<Shooter> shooters;
+    private ArrayList<GameObject> shoot;
 
     private boolean levelFinished = false;
     
-
+    long startTime = System.nanoTime();
+    long delay = 2500;
+    
     public TileMap(String s, int tileSize){
         
         this.tileSize = tileSize;
-
-
         spikes = new ArrayList<>();
+        shooters = new ArrayList<>();
+        shoot = new ArrayList<>();
         
-        //finish = new Finish();
-
-
         finish = new Finish();
         finish.loadFinish();
 
@@ -80,12 +79,19 @@ public class TileMap {
                         finish.setPosition(col * tileSize - 5, row * tileSize - 16);
                     }
                     if(map[row][col] == 4){
-                        spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32,"src/game/models/spikes.png"));
-                        spikes.add(new GameObject(col * tileSize + 32,row * tileSize + 32,"src/game/models/spikes.png"));
+                        spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32,true,"src/game/models/spikes.png"));
+                        spikes.add(new GameObject(col * tileSize + 32,row * tileSize + 32,true,"src/game/models/spikes.png"));
                     }
                     if(map[row][col] == 5){
-                        spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32,"src/game/models/spikes.png"));
+                        spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32,true,"src/game/models/spikes.png"));
                     }
+                    if(map[row][col] == 6){
+                        shooters.add(new Shooter(col * tileSize, row * tileSize + 16, true, "src/game/graphics/shooter_left.png" ));
+                    } 
+                    if(map[row][col] == 7){
+                        shooters.add(new Shooter(col * tileSize, row * tileSize + 16, false, "src/game/graphics/shooter_right.png" )); 
+                    }
+                        
                
                 }
             }
@@ -93,12 +99,6 @@ public class TileMap {
         }
         catch(Exception e){
         }
-
-        
-
-        
-        
-        
 
     }
     
@@ -137,6 +137,7 @@ public class TileMap {
     public Finish getFinish(){
         return finish;
     }
+    
     
     public int getx(){ return x; }
     public int gety(){ return y; }
@@ -193,7 +194,64 @@ public class TileMap {
         return spikes;
     }
     
+    public ArrayList<GameObject> getShots(){
+        return shoot;
+    }
+    
+    public void generateShots(){
+        if(!shooters.isEmpty()){
+            long elapsed = (System.nanoTime() - startTime) / 1000000;
+            if(elapsed > delay){
+                for (int i = 0; i < shooters.size(); i++){
+                    if(shooters.get(i).isLeft()){
+                       shoot.add(new GameObject(shooters.get(i).getx()-40, shooters.get(i).gety()+8, true, "src/game/graphics/kunai_left.png")); 
+                    }
+                    else{
+                       shoot.add(new GameObject(shooters.get(i).getx()+19, shooters.get(i).gety()+8, false, "src/game/graphics/kunai.png")); 
+                    }
+                        
+                }
+                
+                 startTime = System.nanoTime();
+            
+            }
+        }
+    }
+    
+    public void moveShots(){
+        if(!shoot.isEmpty()){
+            int move = 3;
+            for (int i = 0; i < shoot.size(); i++){
+                if(shoot.get(i).isLeft()){
+                     shoot.get(i).setX(-move);
+                }
+                else
+                    shoot.get(i).setX(move);
+               
+            }
+        }
+        
+    }
+    
+    public void deleteShots(){
+        int temp;
+        
+        if(!shoot.isEmpty()){
+            Iterator<GameObject> iterator = shoot.iterator();  
+                    while(iterator.hasNext()){
+                        temp = iterator.next().getX();
+                        if( temp > mapWidth * tileSize || temp < 0)
+                            iterator.remove();
+                    }
+        }
+        
+    }
+    
+    
     public void update(){
+        generateShots();
+        moveShots();
+        deleteShots();
         
     }
     
@@ -218,11 +276,6 @@ public class TileMap {
 
         }
 
-       // g.drawImage(obj.getImage(), obj.getX() * tileSize , obj.getY(), null);
-        
-       
-
-            
             g.drawImage(
 
                     finish.getImage(),
@@ -234,6 +287,16 @@ public class TileMap {
         if(!spikes.isEmpty()){
         for (int i = 0; i < spikes.size(); i++) {
           g.drawImage(spikes.get(i).getImage(), x+spikes.get(i).getX(), spikes.get(i).getY()+y, null);  
+        }}
+        
+        if(!shooters.isEmpty()){
+        for (int i = 0; i < shooters.size(); i++) {
+          g.drawImage(shooters.get(i).getImage(), x+shooters.get(i).getx(), shooters.get(i).gety()+y, null);  
+        }}
+        
+        if(!shoot.isEmpty()){
+        for (int i = 0; i < shoot.size(); i++) {
+          g.drawImage(shoot.get(i).getImage(), x+shoot.get(i).getX(), shoot.get(i).getY()+y, null);  
         }}
         
         

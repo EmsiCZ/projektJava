@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 package game.models;
-import java.awt.image.*;
+
+import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
@@ -12,19 +13,23 @@ import javax.imageio.ImageIO;
  *
  * @author Luboš
  */
-public class Finish {
-    
+public class Shooter {
     private BufferedImage image;
     private int x;
     private int y;
-    private int finishX;
-    private int finishY;
+    boolean left;
     
-    public void setPosition(int x, int y){
+    public Shooter(int x, int y, boolean left, String s){
         this.x = x;
         this.y = y;
-        finishX = x + image.getWidth()/2;
-        finishY = y + image.getHeight()/2;
+        this.left = left;
+        
+        try{
+           image = ImageIO.read(new File(s));
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
     public int getx(){
@@ -35,26 +40,15 @@ public class Finish {
         return y;
     }
     
-    public int getFinishX(){
-        return finishX;
-    }
-    
-    public int getFinishY(){
-        return finishY;
-    }
-    
     public BufferedImage getImage(){
         return image;
     }
     
-    public void loadFinish(){
-    
-    try{
-        image = ImageIO.read(new File("src/game/graphics/finish_door.png"));
-    }
-    catch(Exception e){
-            e.printStackTrace();
-        }
+    public boolean isLeft(){
+        return left;
     }
     
+    public void update(){
+        
+    }
 }

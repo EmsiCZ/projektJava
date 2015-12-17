@@ -20,10 +20,12 @@ public class GameObject {
     private int x;
     private int y;
     private BufferedImage obj;
+    private boolean left;
     
-    public GameObject(int x,int y,String s){
+    public GameObject(int x,int y, boolean left, String s){
       this.x = x;
       this.y = y;
+      this.left = left;
         
         try{
            obj = ImageIO.read(new File(s));
@@ -45,6 +47,12 @@ public class GameObject {
     }
     public BufferedImage getImage(){
         return this.obj;
+    }
+    public boolean isLeft(){
+        return left;
+    }
+    public void setX(int move){
+        x+=move;
     }
     
 }
