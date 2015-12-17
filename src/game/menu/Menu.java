@@ -69,6 +69,9 @@ public class Menu {
     public void update(){
         
     }
+    public void setMenu(){
+        State = STATE.MAINMENU;
+    }
     public void draw(Graphics2D g){
         
         g.drawImage(MenuBackground, 0, 0, null);

@@ -5,11 +5,12 @@
  */
 package game.view;
 import game.models.Finish;
-import java.io.*;
+import game.models.GameObject;
 import java.awt.*;
 import java.awt.image.*;
+import java.io.*;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import game.models.GameObject;
 /**
  *
  * @author Luboš
@@ -36,15 +37,16 @@ public class TileMap {
     private int maxy = 0;
     
     private GameObject obj;
+    private GameObject obj2;
     
+    private ArrayList<GameObject> spikes;
     public TileMap(String s, int tileSize){
         
         this.tileSize = tileSize;
 
+        spikes = new ArrayList<>();
         
-       // obj = new GameObject(1000,598,"src/game/models/spikes.png");
-
-        finish = new Finish();
+        //finish = new Finish();
 
         
         try{
@@ -64,7 +66,15 @@ public class TileMap {
                 for (int col = 0; col < mapWidth; col++) {
                     map[row][col] = Integer.parseInt(tokens[col]);
                     if(map[row][col] == 3){
-                        finish.setPosition(col * tileSize - 5, row * tileSize - 16);
+                        finish = new Finish(col * tileSize - 5, row * tileSize - 16);
+                        //finish.setPosition(col * tileSize - 5, row * tileSize - 16);
+                    }
+                    if(map[row][col] == 4){
+                        spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32,"src/game/models/spikes.png"));
+                        spikes.add(new GameObject(col * tileSize + 32,row * tileSize + 32,"src/game/models/spikes.png"));
+                    }
+                    if(map[row][col] == 5){
+                        spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32,"src/game/models/spikes.png"));
                     }
                
                 }
@@ -73,7 +83,7 @@ public class TileMap {
         }
         catch(Exception e){
         }
-        finish.loadFinish();
+        //finish.loadFinish();
     }
     
     public void loadTiles(String s){
@@ -151,6 +161,9 @@ public class TileMap {
             y = maxy;
         }
     }
+    public ArrayList<GameObject> getSpikes(){
+        return spikes;
+    }
     
     public void update(){
         
@@ -176,13 +189,18 @@ public class TileMap {
         }
 
        // g.drawImage(obj.getImage(), obj.getX() * tileSize , obj.getY(), null);
-
+        
         g.drawImage(
                     finish.getImage(),
                     x + finish.getx(),
                     y + finish.gety(),
                     null
                 );
-
+        if(!spikes.isEmpty()){
+        for (int i = 0; i < spikes.size(); i++) {
+          g.drawImage(spikes.get(i).getImage(), x+spikes.get(i).getX(), spikes.get(i).getY()+y, null);  
+        }}
+        
+        
     }
 }

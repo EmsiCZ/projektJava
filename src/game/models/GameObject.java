@@ -22,8 +22,8 @@ public class GameObject {
     private BufferedImage obj;
     
     public GameObject(int x,int y,String s){
-        this.x = x; 
-        this.y = y;
+      this.x = x;
+      this.y = y;
         
         try{
            obj = ImageIO.read(new File(s));
@@ -46,4 +46,5 @@ public class GameObject {
     public BufferedImage getImage(){
         return this.obj;
     }
+    
 }

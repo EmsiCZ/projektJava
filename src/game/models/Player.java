@@ -57,6 +57,7 @@ public class Player {
     private BufferedImage[] throwingNinja;
     private boolean facingRight;
     private boolean loop;
+    private boolean dead = false;
     
     public Player(TileMap tm){
             
@@ -326,9 +327,37 @@ public class Player {
         else if(dx < 0){
             facingRight = false;
         }
-      
+        /*CHECK COLISION*/
+        checkColision();
+
     }
-    
+    void checkColision(){
+                for (int i = 0; i < tileMap.getSpikes().size(); i++) {
+            if(
+                    ((x - animation.getImage().getWidth() / 2) + animation.getImage().getWidth() >= tileMap.getSpikes().get(i).getX() && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() >= tileMap.getSpikes().get(i).getY()+20 &&
+                    (x - animation.getImage().getWidth() / 2) + animation.getImage().getWidth() <= tileMap.getSpikes().get(i).getX()+32 && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() >= tileMap.getSpikes().get(i).getY()+20&&
+                    (x - animation.getImage().getWidth() / 2) + animation.getImage().getWidth() >= tileMap.getSpikes().get(i).getX() && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() <= tileMap.getSpikes().get(i).getY() +34 &&
+                    (x - animation.getImage().getWidth() / 2) + animation.getImage().getWidth() <= tileMap.getSpikes().get(i).getX()+32 && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() <= tileMap.getSpikes().get(i).getY() +34)
+                    ||
+                    ((x - animation.getImage().getWidth() / 2) <= tileMap.getSpikes().get(i).getX()+32 && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() >= tileMap.getSpikes().get(i).getY()+20 &&
+                    (x - animation.getImage().getWidth() / 2) >= tileMap.getSpikes().get(i).getX() && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() >= tileMap.getSpikes().get(i).getY()+20 &&
+                    (x - animation.getImage().getWidth() / 2) >= tileMap.getSpikes().get(i).getX() && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() <= tileMap.getSpikes().get(i).getY() +34 &&
+                    (x - animation.getImage().getWidth() / 2) <= tileMap.getSpikes().get(i).getX()+32 && (y - animation.getImage().getHeight() / 2) +  animation.getImage().getHeight() <= tileMap.getSpikes().get(i).getY() +34)
+                    
+                    
+              ){
+                x = 80;
+                y = 80;
+                dead = true;
+            }
+        }
+    }
+    public boolean isDead(){
+        return dead;
+    }
+    public void setDead(boolean dead){
+        this.dead = dead;
+    }
     public void draw(Graphics2D g){
         
         int tx = tileMap.getx();

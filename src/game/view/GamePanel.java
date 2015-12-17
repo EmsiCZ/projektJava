@@ -31,6 +31,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     
     private BufferedImage image;
     private Graphics2D g;
+    private BufferedImage DeadMenu;
     
     private int FPS = 60;
     private int targetTime = 1000/FPS;
@@ -41,12 +42,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     private enum STATE{
         GAME, 
         MENU,
-        CHARACTER
+        CHARACTER,
+        DEAD
     };
     private STATE State = STATE.MENU;
     
     private Menu menu;
-    
+    public void loadDead() {
+        
+        try{
+        DeadMenu = ImageIO.read(new File("src/game/graphics/levelfailed.gif"));
+         }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     public GamePanel(){
         super();
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -98,21 +107,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_BGR);
             g = (Graphics2D) image.getGraphics();
 
-            tileMap = new TileMap("src/game/levels/testMap.txt", 64);
+            tileMap = new TileMap("src/game/levels/level1.txt", 64);
             tileMap.loadBackground("src/game/graphics/BG1280x720.gif");
             tileMap.loadTiles("src/game/graphics/tileset.gif");
 
             player = new Player(tileMap);
             player.loadPlayer("src/game/graphics/player/run_000.png");
-            player.setx(80);
-            player.sety(80);
-           // obj = new GameObject(tileMap.getMapWidht()*tileMap.getTileSize() - 1000,558,"src/game/models/spikes.png");
+            player.setx(100);
+            player.sety(100);
+           
         }
         
     
     public void initMenu(){
         running = true;
-        
+        loadDead();
         menu = new Menu("src/game/menu/MenuBackground.gif");
     }
     
@@ -122,6 +131,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             if(State == STATE.GAME){
                 tileMap.update();
                 player.update();
+                if(player.isDead()){
+                    menu.setMenu();
+                    State = STATE.DEAD;
+                    player.setDead(false);
+                }
             }
         }
         
@@ -136,6 +150,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             tileMap.draw(g);
             player.draw(g); 
            // obj.draw(g);
+           }
+           if(State == STATE.DEAD){
+               g.drawImage(DeadMenu, 0, 0, this);
            }
         }
         
@@ -200,6 +217,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
             if(code == KeyEvent.VK_SPACE){
                 player.setThrowing(true);
+            }
+        }
+        if(State == STATE.DEAD){
+            if(code == KeyEvent.VK_ENTER){
+                player.setx(100);
+                player.sety(100);
+                State = STATE.GAME;
+            }
+            if(code == KeyEvent.VK_ESCAPE){
+                State = STATE.MENU;
             }
         }
     }

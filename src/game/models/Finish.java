@@ -18,11 +18,21 @@ public class Finish {
     private int x;
     private int y;
     
-    public void setPosition(int x, int y){
+    /*public void setPosition(int x, int y){
         this.x = x;
         this.y = y;
+    }*/
+    public Finish(int x, int y){
+        this.x = x;
+        this.y = y;
+            try{
+        image = ImageIO.read(new File("src/game/graphics/finish_door.png"));
     }
-    
+    catch(Exception e){
+            e.printStackTrace();
+        }
+               
+    }
     public int getx(){
         return x;
     }
@@ -35,7 +45,7 @@ public class Finish {
         return image;
     }
     
-    public void loadFinish(){
+    /*public void loadFinish(){
     
     try{
         image = ImageIO.read(new File("src/game/graphics/finish_door.png"));
@@ -43,6 +53,6 @@ public class Finish {
     catch(Exception e){
             e.printStackTrace();
         }
-    }
+    }*/
     
 }
