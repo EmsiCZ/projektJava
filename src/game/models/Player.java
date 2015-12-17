@@ -162,15 +162,27 @@ public class Player {
     private void calculateCorners(double x, double y){
         
         int leftTile = tileMap.getColTile((int) (x - width / 2));
-        int rightTile = tileMap.getColTile((int) (x + width / 2) - 1); //-1 for out of bounds
+        int rightTile = tileMap.getColTile((int) (x + width/ 2) - 1); //-1 for out of bounds
         int topTile = tileMap.getRowTile((int) (y - height / 2));
-        int bottomTile = tileMap.getRowTile((int) (y + height / 2) - 1);
+        int bottomTile = tileMap.getRowTile((int) (y + height  / 2) - 1);
         topLeft = tileMap.isBlocked(topTile, leftTile) || x < 0;
         topRight = tileMap.isBlocked(topTile, rightTile);
         bottomLeft = tileMap.isBlocked(bottomTile, leftTile) || x < 0;
         bottomRight = tileMap.isBlocked(bottomTile, rightTile);
         
     }
+    
+    private boolean checkFinish(){
+        
+        if(x - animation.getImage().getWidth() / 2 <= tileMap.getFinish().getFinishX() && (x - animation.getImage().getWidth() / 2) + animation.getImage().getWidth()>= tileMap.getFinish().getFinishX() &&
+           y - animation.getImage().getHeight() / 2 <= tileMap.getFinish().getFinishY() && (y - animation.getImage().getHeight() / 2) + animation.getImage().getHeight() >= tileMap.getFinish().getFinishY() ){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+ 
     ////////////////////////////////////////////
     
     public void update(){
@@ -327,8 +339,13 @@ public class Player {
         else if(dx < 0){
             facingRight = false;
         }
+
         /*CHECK COLISION*/
         checkColision();
+
+
+     
+        tileMap.setLevelFinished(checkFinish());
 
     }
     void checkColision(){
@@ -380,6 +397,5 @@ public class Player {
                     null);
         }
     }
-    
     
 }

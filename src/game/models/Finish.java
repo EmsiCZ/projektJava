@@ -17,22 +17,30 @@ public class Finish {
     private BufferedImage image;
     private int x;
     private int y;
+    private int finishX;
+    private int finishY;
     
-    /*public void setPosition(int x, int y){
+    public void setPosition(int x, int y){
         this.x = x;
         this.y = y;
-    }*/
-    public Finish(int x, int y){
+        finishX = x + image.getWidth()/2;
+        finishY = y + image.getHeight()/2;
+
+    }
+    /*public Finish(int x, int y){
         this.x = x;
         this.y = y;
             try{
         image = ImageIO.read(new File("src/game/graphics/finish_door.png"));
+
+        
+
     }
     catch(Exception e){
             e.printStackTrace();
         }
                
-    }
+    }*/
     public int getx(){
         return x;
     }
@@ -41,11 +49,19 @@ public class Finish {
         return y;
     }
     
+    public int getFinishX(){
+        return finishX;
+    }
+    
+    public int getFinishY(){
+        return finishY;
+    }
+    
     public BufferedImage getImage(){
         return image;
     }
     
-    /*public void loadFinish(){
+    public void loadFinish(){
     
     try{
         image = ImageIO.read(new File("src/game/graphics/finish_door.png"));
@@ -53,6 +69,6 @@ public class Finish {
     catch(Exception e){
             e.printStackTrace();
         }
-    }*/
+    }
     
 }

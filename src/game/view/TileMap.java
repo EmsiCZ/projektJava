@@ -36,17 +36,27 @@ public class TileMap {
     private int maxx = 0;
     private int maxy = 0;
     
+
     private GameObject obj;
     private GameObject obj2;
     
     private ArrayList<GameObject> spikes;
+
+    private boolean levelFinished = false;
+    
+
     public TileMap(String s, int tileSize){
         
         this.tileSize = tileSize;
 
+
         spikes = new ArrayList<>();
         
         //finish = new Finish();
+
+
+        finish = new Finish();
+        finish.loadFinish();
 
         
         try{
@@ -66,8 +76,8 @@ public class TileMap {
                 for (int col = 0; col < mapWidth; col++) {
                     map[row][col] = Integer.parseInt(tokens[col]);
                     if(map[row][col] == 3){
-                        finish = new Finish(col * tileSize - 5, row * tileSize - 16);
-                        //finish.setPosition(col * tileSize - 5, row * tileSize - 16);
+                        //finish = new Finish(col * tileSize - 5, row * tileSize - 16);
+                        finish.setPosition(col * tileSize - 5, row * tileSize - 16);
                     }
                     if(map[row][col] == 4){
                         spikes.add(new GameObject(col * tileSize + 0,row * tileSize + 32,"src/game/models/spikes.png"));
@@ -83,7 +93,13 @@ public class TileMap {
         }
         catch(Exception e){
         }
-        //finish.loadFinish();
+
+        
+
+        
+        
+        
+
     }
     
     public void loadTiles(String s){
@@ -118,6 +134,10 @@ public class TileMap {
         }
     }
     
+    public Finish getFinish(){
+        return finish;
+    }
+    
     public int getx(){ return x; }
     public int gety(){ return y; }
     
@@ -136,6 +156,11 @@ public class TileMap {
     public int getMapWidht(){
         return mapWidth;
     }
+    
+    public boolean getLevelFinished(){
+        return levelFinished;
+    }
+    
     public boolean isBlocked(int row, int col){
         int rc = map[row][col];
         int r = rc / tiles[0].length;
@@ -143,6 +168,9 @@ public class TileMap {
         return tiles[r][c].isBlocked();
     }
     
+    public void setLevelFinished(boolean x){
+        levelFinished = x;
+    }
     public void setx(int i){ 
         x = i;
         if(x < minx){
@@ -170,15 +198,16 @@ public class TileMap {
     }
     
     public void draw(Graphics2D g){
-        g.drawImage(background, 0, 0, null);
-        for (int row = 0; row < mapHeight; row++) {
-            for (int col = 0; col < mapWidth; col++) {
-                int rc = map[row][col];
+        
+           g.drawImage(background, 0, 0, null);
+            for (int row = 0; row < mapHeight; row++) {
+                for (int col = 0; col < mapWidth; col++) {
+                    int rc = map[row][col];
                 
-                int r = rc / tiles[0].length;
-                int c = rc % tiles[0].length;
+                    int r = rc / tiles[0].length;
+                    int c = rc % tiles[0].length;
                 
-                g.drawImage(
+                    g.drawImage(
                     tiles[r][c].getImage(),
                     x + col * tileSize,
                     y + row * tileSize,
@@ -186,15 +215,21 @@ public class TileMap {
                 );
             }
             
+
         }
 
        // g.drawImage(obj.getImage(), obj.getX() * tileSize , obj.getY(), null);
         
-        g.drawImage(
+       
+
+            
+            g.drawImage(
+
                     finish.getImage(),
                     x + finish.getx(),
                     y + finish.gety(),
                     null
+
                 );
         if(!spikes.isEmpty()){
         for (int i = 0; i < spikes.size(); i++) {
@@ -203,4 +238,9 @@ public class TileMap {
         
         
     }
-}
+
+               
+        }
+        
+
+
