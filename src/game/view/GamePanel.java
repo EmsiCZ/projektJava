@@ -119,18 +119,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             g = (Graphics2D) image.getGraphics();
 
 
-            tileMap = new TileMap("src/game/levels/level3.txt", 64);
+            //tileMap = new TileMap("src/game/levels/level3.txt", 64);
 
-            //tileMap = new TileMap("src/game/levels/level"+level+".txt", 64);
+            tileMap = new TileMap("src/game/levels/level"+level+".txt", 64);
 
             tileMap.loadBackground("src/game/graphics/BG1280x720.gif");
             tileMap.loadTiles("src/game/graphics/tileset.gif");
 
             player = new Player(tileMap);
-            player.loadPlayer("src/game/graphics/player/run_000.png");
+            player.loadPlayer("src/game/graphics/player/Idle_000.gif");
 
             player.setx(100);
-            player.sety(100);
+            player.sety(tileMap.getTileSize()*tileMap.getMapHeight() - (3*tileMap.getTileSize()));
            
 
             /*player.setx(80);
@@ -153,8 +153,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     
     public void nextLevel(){
         tileMap.setLevelFinished(false);
+        tileMap.clearShooters();
+        tileMap.clearShots();
         tileMap = null;
         player = null;
+        
                 
         level++;
         tileMap = new TileMap("src/game/levels/level"+level+".txt", 64);
@@ -178,6 +181,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
                 if(player.isDead()){
                     menu.setMenu();
+                    tileMap.clearShots();
+                    //tileMap.clearShooters();
                     State = STATE.DEAD;
                     player.setDead(false);
                 }

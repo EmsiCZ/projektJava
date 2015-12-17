@@ -170,6 +170,10 @@ public class TileMap {
         return mapWidth;
     }
     
+    public int getMapHeight(){
+        return mapHeight;
+    }
+    
     public boolean getLevelFinished(){
         return levelFinished;
     }
@@ -208,6 +212,14 @@ public class TileMap {
     
     public ArrayList<GameObject> getShots(){
         return shoot;
+    }
+    
+    public void clearShooters(){
+        shooters.clear();
+    }
+    
+    public void clearShots(){
+        shoot.clear();
     }
     
     public void generateShots(){
